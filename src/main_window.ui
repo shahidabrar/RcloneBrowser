@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -174,6 +174,16 @@
            <widget class="QToolButton" name="buttonCleanNotRunning">
             <property name="text">
              <string>Clean</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonSortByTime">
+            <property name="text">
+             <string>sortByTime</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -1100,6 +1110,14 @@
    </property>
    <property name="toolTip">
     <string>Stop scheduler</string>
+   </property>
+  </action>
+  <action name="actionSortByTime">
+   <property name="text">
+    <string>Sort</string>
+   </property>
+   <property name="toolTip">
+    <string>Sort by start time</string>
    </property>
   </action>
  </widget>
