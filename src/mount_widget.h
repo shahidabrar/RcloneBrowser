@@ -13,6 +13,7 @@ public:
               QWidget *parent = nullptr);
   ~MountWidget();
   bool isRunning = true;
+  QDateTime getStartDateTime();
 
 public slots:
   void cancel();
@@ -36,4 +37,8 @@ private:
   QString mRcPort = "0";
   QStringList mArgs;
   QString mUniqueID = "";
+  QDateTime mStartDateTime = QDateTime::currentDateTime();
+  QDateTime mFinishDateTime;
+
+  void updateStartFinishInfo();
 };

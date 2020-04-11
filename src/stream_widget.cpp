@@ -7,6 +7,8 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
     : QWidget(parent), mRclone(rclone), mPlayer(player) {
   ui.setupUi(this);
 
+  updateStartFinishInfo();
+
   QString remoteTrimmed;
 
   auto settings = GetSettings();
@@ -154,6 +156,9 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
 
+        mFinishDateTime = QDateTime::currentDateTime();
+        updateStartFinishInfo();
+
         emit finished();
         //          emit closed();
       });
@@ -173,4 +178,17 @@ void StreamWidget::cancel() {
   mPlayer->terminate();
   mRclone->kill();
   mRclone->waitForFinished();
+}
+
+QDateTime StreamWidget::getStartDateTime() { return mStartDateTime; }
+
+void StreamWidget::updateStartFinishInfo() {
+
+  ui.le_StartFinishInfo->setText(
+      "Started:   " +
+      QLocale(QLocale::English)
+          .toString(mStartDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t") +
+      "              " + "Finished:  " +
+      QLocale(QLocale::English)
+          .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
 }

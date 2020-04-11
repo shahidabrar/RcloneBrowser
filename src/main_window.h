@@ -120,6 +120,7 @@ private:
   QMutex mSaveSchedulerFileMutex;
   QMutex mStopTaskMutex;
   QMutex mRunTaskMutex;
+  QMutex mJobsSortMutex;
 
   // if waiting for processes we show dialog - this is used to calculate delay
   int mQuitInfoDelay = 0;
@@ -127,4 +128,9 @@ private:
   void addTasksToQueue();
 
   void restoreSchedulersFromFile();
+
+  void sortJobs();
+  bool mJobsTimeSortOrder = false;
+  bool mJobsStatusSortOrder = false;
+  QString mJobsSort = "byDate";
 };

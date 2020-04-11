@@ -41,5 +41,8 @@ private:
   QString mTransferMode = "";
   QString mRequestId = "";
   QString mJobFinalStatus = "";
-  QDateTime mStartDateTime;
+
+  QDateTime mStartDateTime = QDateTime::currentDateTime();
+  QDateTime mFinishDateTime;
+  void updateStartFinishInfo();
 };

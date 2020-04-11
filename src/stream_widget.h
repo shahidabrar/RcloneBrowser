@@ -12,6 +12,7 @@ public:
                QWidget *parent = nullptr);
   ~StreamWidget();
   bool isRunning = true;
+  QDateTime getStartDateTime();
 
 public slots:
   void cancel();
@@ -27,4 +28,8 @@ private:
   QProcess *mPlayer;
 
   QStringList mArgs;
+
+  QDateTime mStartDateTime = QDateTime::currentDateTime();
+  QDateTime mFinishDateTime;
+  void updateStartFinishInfo();
 };

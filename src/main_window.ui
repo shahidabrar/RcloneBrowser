@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>821</width>
-    <height>463</height>
+    <width>975</width>
+    <height>537</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -181,9 +181,47 @@
            </widget>
           </item>
           <item>
+           <spacer name="horizontalSpacer_11">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QToolButton" name="buttonSortByTime">
+            <property name="toolTip">
+             <string>Sort by start time</string>
+            </property>
+            <property name="statusTip">
+             <string>Sort by start time</string>
+            </property>
             <property name="text">
-             <string>sortByTime</string>
+             <string>Sort</string>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextUnderIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="buttonSortByStatus">
+            <property name="toolTip">
+             <string>Sort by start status</string>
+            </property>
+            <property name="statusTip">
+             <string>Sort by start status</string>
+            </property>
+            <property name="text">
+             <string>Sort</string>
             </property>
             <property name="toolButtonStyle">
              <enum>Qt::ToolButtonTextUnderIcon</enum>
@@ -241,8 +279,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>773</width>
-             <height>297</height>
+             <width>927</width>
+             <height>371</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -816,8 +854,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>773</width>
-             <height>297</height>
+             <width>927</width>
+             <height>371</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -872,7 +910,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>821</width>
+     <width>975</width>
      <height>22</height>
     </rect>
    </property>
@@ -1120,6 +1158,14 @@
     <string>Sort by start time</string>
    </property>
   </action>
+  <action name="actionSortByStatus">
+   <property name="text">
+    <string>Sort</string>
+   </property>
+   <property name="toolTip">
+    <string>Sort by status</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>tabs</tabstop>
@@ -1200,6 +1246,22 @@
    <hints>
     <hint type="sourcelabel">
      <x>158</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonSortByStatus</sender>
+   <signal>clicked()</signal>
+   <receiver>actionSortByStatus</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>208</x>
      <y>73</y>
     </hint>
     <hint type="destinationlabel">

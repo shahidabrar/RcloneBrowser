@@ -190,6 +190,8 @@ MainWindow::MainWindow() {
       QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   // triggered via slot so button text can be different than action menu
   ui.buttonSortByTime->setIcon(
+      QIcon(":media/images/qbutton_icons/sortTimeZA" + img_add + ".png"));
+  ui.buttonSortByStatus->setIcon(
       QIcon(":media/images/qbutton_icons/sortZA" + img_add + ".png"));
 
   ui.actionDryRun->setIcon(
@@ -239,12 +241,18 @@ MainWindow::MainWindow() {
 
   QPixmap sortZAPixmap(":media/images/qbutton_icons/sortZA" + img_add + ".png");
   QPixmap sortAZPixmap(":media/images/qbutton_icons/sortAZ" + img_add + ".png");
+  QPixmap sortTimeZAPixmap(":media/images/qbutton_icons/sortTimeZA" + img_add +
+                           ".png");
+  QPixmap sortTimeAZPixmap(":media/images/qbutton_icons/sortTimeAZ" + img_add +
+                           ".png");
 
   QIcon arrowDownIcon(arrowDownPixmap);
   QIcon arrowUpIcon(arrowUpPixmap);
   QIcon mount1Icon(mount1Pixmap);
   QIcon sortZAIcon(sortZAPixmap);
   QIcon sortAZIcon(sortAZPixmap);
+  QIcon sortTimeZAIcon(sortTimeZAPixmap);
+  QIcon sortTimeAZIcon(sortTimeAZPixmap);
 
   ui.buttonDryrunTask->setDefaultAction(ui.actionDryRun);
   ui.buttonRunTask->setDefaultAction(ui.actionRun);
@@ -353,6 +361,10 @@ MainWindow::MainWindow() {
     ui.buttonStopScheduler->setMinimumWidth(button_width);
     ui.buttonStartScheduler->setIconSize(QSize(icon_w, icon_h));
     ui.buttonStartScheduler->setMinimumWidth(button_width);
+    ui.buttonSortByTime->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSortByTime->setMinimumWidth(button_width);
+    ui.buttonSortByStatus->setIconSize(QSize(icon_w, icon_h));
+    ui.buttonSortByStatus->setMinimumWidth(button_width);
 
   } else {
     if (buttonStyle == "textonly") {
@@ -401,6 +413,10 @@ MainWindow::MainWindow() {
       ui.buttonStopScheduler->setMinimumWidth(button_width);
       ui.buttonStartScheduler->setToolButtonStyle(Qt::ToolButtonTextOnly);
       ui.buttonStartScheduler->setMinimumWidth(button_width);
+      ui.buttonSortByTime->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSortByTime->setMinimumWidth(button_width);
+      ui.buttonSortByStatus->setToolButtonStyle(Qt::ToolButtonTextOnly);
+      ui.buttonSortByStatus->setMinimumWidth(button_width);
 
     } else {
       // button style - icononly
@@ -448,8 +464,15 @@ MainWindow::MainWindow() {
       ui.buttonStopScheduler->setIconSize(QSize(icon_w, icon_h));
       ui.buttonStartScheduler->setToolButtonStyle(Qt::ToolButtonIconOnly);
       ui.buttonStartScheduler->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSortByTime->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSortByTime->setIconSize(QSize(icon_w, icon_h));
+      ui.buttonSortByStatus->setToolButtonStyle(Qt::ToolButtonIconOnly);
+      ui.buttonSortByStatus->setIconSize(QSize(icon_w, icon_h));
     }
   }
+
+  // initial sortByTime
+  ui.buttonSortByStatus->setStyleSheet("QToolButton {border: 0;}");
 
   // layout spacers - otherwise layout of different tabs differ due to checkbox
   // on queue tab
@@ -1284,103 +1307,46 @@ MainWindow::MainWindow() {
     ui.tabs->setTabText(4, QString("Scheduler (%1)").arg(mSchedulersCount));
   });
 
+  //!!!  QObject::connect(ui.actionSortByStatus
+  QObject::connect(ui.actionSortByStatus, &QAction::triggered, this, [=]() {
+    qDebug() << "actionSortByStatus";
+    ui.buttonSortByTime->setStyleSheet("QToolButton {border: 0;}");
+    ui.buttonSortByStatus->setStyleSheet("QToolButton {}");
+
+    mJobsSort = "byStatus";
+    mJobsTimeSortOrder = !mJobsTimeSortOrder;
+
+    if (mJobsTimeSortOrder) {
+      ui.buttonSortByStatus->setIcon(sortAZIcon);
+    } else {
+      ui.buttonSortByStatus->setIcon(sortZAIcon);
+    }
+  });
+
   //!!!  QObject::connect(ui.actionSortByTime
   QObject::connect(ui.actionSortByTime, &QAction::triggered, this, [=]() {
     qDebug() << "actionSortByTime";
 
-    int widgetsCount = ui.jobs->count();
-    int move;
-    QDateTime dt;
+    ui.buttonSortByStatus->setStyleSheet("QToolButton {border: 0;}");
+    ui.buttonSortByTime->setStyleSheet("QToolButton {}");
 
-    qDebug() << "widgetsCount" << widgetsCount;
+    // flip sort order
+    mJobsSort = "byDate";
+    mJobsTimeSortOrder = !mJobsTimeSortOrder;
 
+    // QToolButton { border: 0; }\n\nQToolButton:pressed {\n border: 4;\n
+    // border-radius: 10px;\n border-style: inset;\n border-color: rgba(1, 1, 1,
+    // 0);\n}
 
+    // ui.buttonSortByTime->setStyleSheet("QToolButton { border: none; } ")
 
-
-    qDebug() << "QDateTime::currentDateTime(): " << QDateTime::currentDateTime();
-
-
-    for (int i = 0; i < (widgetsCount - 2) / 2 - 1; i = i + 1) {
-      qDebug() << "i: " << i;
-
-      for (int j = widgetsCount - 4; j >= i * 2; j = j - 2) {
-        qDebug() << "j: " << j;
-
-        QWidget *widget = ui.jobs->itemAt(j)->widget();
-
-        if (auto transfer = qobject_cast<JobWidget *>(widget)) {
-
-          if (j == widgetsCount - 4) {
-
-            move = j;
-            dt = transfer->getStartDateTime();
-
-          } else {
-
-            if (dt > transfer->getStartDateTime()) {
-
-              move = j;
-              dt = transfer->getStartDateTime();
-            }
-          }
-        }
-      }
-      qDebug() << "move: " << move;      
-      // move j to top
-         QWidget *widget = ui.jobs->itemAt(move)->widget();     
-         auto transfer = qobject_cast<JobWidget *>(widget);
-
-         QWidget *widget_line = ui.jobs->itemAt(move+1)->widget();
-         auto line  = qobject_cast<QFrame *>(widget_line);   
-
-        ui.jobs->removeWidget(transfer);
-        ui.jobs->removeWidget(line);
-
-
-     ui.jobs->insertWidget(i*2, transfer);
-     ui.jobs->insertWidget(i*2+1, line);   
-      
-      
+    if (mJobsTimeSortOrder) {
+      ui.buttonSortByTime->setIcon(sortTimeAZIcon);
+    } else {
+      ui.buttonSortByTime->setIcon(sortTimeZAIcon);
     }
-    
-     qDebug() << "QDateTime::currentDateTime(): " << QDateTime::currentDateTime();   
 
-    /*
-        for (int i = 0; i <= widgetsCount-2; i = i + 2) {
-
-          for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
-
-            QWidget *widget = ui.jobs->itemAt(j)->widget();
-
-            if (auto transfer = qobject_cast<JobWidget *>(widget)) {
-
-              QDateTime dt = transfer->getStartDateTime();
-              qDebug() << "getStartDateTime(): " <<
-       transfer->getStartDateTime();
-
-            } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
-
-            } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
-
-            }
-          }
-          // move up extreme
-
-
-        }
-
-     */
-
-    //        QWidget *widget_line = ui.jobs->itemAt(i+1)->widget();
-    //        auto line  = qobject_cast<QFrame *>(widget_line);
-    /*
-        ui.jobs->removeWidget(transfer);
-        ui.jobs->removeWidget(line);
-
-
-     ui.jobs->insertWidget(0, transfer);
-     ui.jobs->insertWidget(1, line);
-    */
+    sortJobs();
   });
 
   //!!!  QObject::connect(ui.actionAddToScheduler
@@ -3634,6 +3600,7 @@ void MainWindow::listTasks() {
 void MainWindow::runItem(JobOptionsListWidgetItem *item,
                          const QString &transferMode, const QString &requestId,
                          bool dryrun) {
+
   if (item == nullptr)
     return;
 
@@ -4327,6 +4294,9 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
     ui.jobs->removeWidget(line);
     widget->deleteLater();
     delete line;
+
+    sortJobs();
+
     if (ui.jobs->count() == 2) {
       ui.noJobsAvailable->show();
     }
@@ -4342,6 +4312,8 @@ void MainWindow::addTransfer(const QString &message, const QString &source,
   ui.jobs->insertWidget(0, widget);
   ui.jobs->insertWidget(1, line);
   ++mTransferJobCount;
+
+  sortJobs();
 
   // prevent OS sleep when transfer running
 #if defined(Q_OS_WIN)
@@ -4870,4 +4842,109 @@ void MainWindow::slotCloseTab(int index) {
       }
     }
   }
+}
+
+void MainWindow::sortJobs() {
+
+  qDebug() << "Sort start: " << QDateTime::currentDateTime();
+
+  //  bool mJobsTimeSortOrder = false;
+  //  bool mJobsStatusSortOrder = false;
+  //  QString mJobsSort = "byDate";
+
+  //  QMutexLocker locker(&mMutex);
+
+  QMutexLocker locker(&mJobsSortMutex);
+
+  int widgetsCount = ui.jobs->count();
+  int move;
+  QDateTime dt;
+
+  qDebug() << "widgetsCount" << widgetsCount;
+
+  for (int i = 0; i < (widgetsCount - 2) / 2 - 1; i = i + 1) {
+    //    qDebug() << "i: " << i;
+
+    for (int j = widgetsCount - 4; j >= i * 2; j = j - 2) {
+      //      qDebug() << "j: " << j;
+
+      QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+      if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+
+
+        if (j == widgetsCount - 4) {
+          move = j;
+          dt = transfer->getStartDateTime();
+        } else {
+          if (mJobsTimeSortOrder) {
+            if (dt > transfer->getStartDateTime()) {
+              move = j;
+              dt = transfer->getStartDateTime();
+            }
+          } else {
+            if (dt < transfer->getStartDateTime()) {
+              move = j;
+              dt = transfer->getStartDateTime();
+            }
+          }
+        }
+
+
+      }
+    } // for (int j
+    
+    //    qDebug() << "move: " << move;
+    // move j to top
+    QWidget *widget = ui.jobs->itemAt(move)->widget();
+    auto transfer = qobject_cast<JobWidget *>(widget);
+
+    QWidget *widget_line = ui.jobs->itemAt(move + 1)->widget();
+    auto line = qobject_cast<QFrame *>(widget_line);
+
+    ui.jobs->removeWidget(transfer);
+    ui.jobs->removeWidget(line);
+
+    ui.jobs->insertWidget(i * 2, transfer);
+    ui.jobs->insertWidget(i * 2 + 1, line);
+  }
+
+  qDebug() << "Sort end: " << QDateTime::currentDateTime();
+
+  /*
+      for (int i = 0; i <= widgetsCount-2; i = i + 2) {
+
+        for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
+
+          QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+          if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+
+            QDateTime dt = transfer->getStartDateTime();
+            qDebug() << "getStartDateTime(): " <<
+     transfer->getStartDateTime();
+
+          } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+
+          } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+
+          }
+        }
+        // move up extreme
+
+
+      }
+
+   */
+
+  //        QWidget *widget_line = ui.jobs->itemAt(i+1)->widget();
+  //        auto line  = qobject_cast<QFrame *>(widget_line);
+  /*
+      ui.jobs->removeWidget(transfer);
+      ui.jobs->removeWidget(line);
+
+
+   ui.jobs->insertWidget(0, transfer);
+   ui.jobs->insertWidget(1, line);
+  */
 }

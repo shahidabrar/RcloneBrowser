@@ -9,9 +9,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
-  mStartDateTime = QDateTime::currentDateTime();
-
-qDebug() << "mStartDateTime: " << mStartDateTime;
+  updateStartFinishInfo();
 
   mArgs.append(QDir::toNativeSeparators(GetRclone()));
   mArgs.append(args);
@@ -325,6 +323,9 @@ qDebug() << "mStartDateTime: " << mStartDateTime;
           ui.progress_info->hide();
         }
 
+        mFinishDateTime = QDateTime::currentDateTime();
+        updateStartFinishInfo();
+
         ui.cancel->setToolTip("Close");
         ui.cancel->setStatusTip("Close");
         emit finished(ui.info->text(), mJobFinalStatus);
@@ -364,3 +365,14 @@ QString JobWidget::getRequestId() { return mRequestId; }
 QString JobWidget::getTransferMode() { return mTransferMode; }
 
 QDateTime JobWidget::getStartDateTime() { return mStartDateTime; }
+
+void JobWidget::updateStartFinishInfo() {
+
+  ui.le_StartFinishInfo->setText(
+      "Started:   " +
+      QLocale(QLocale::English)
+          .toString(mStartDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t") +
+      "              " + "Finished:  " +
+      QLocale(QLocale::English)
+          .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
+}
