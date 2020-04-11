@@ -173,6 +173,25 @@ MainWindow::MainWindow() {
     img_add = "_inv";
   }
 
+  ui.actionRefresh->setIcon(
+      QIcon(":media/images/qbutton_icons/refresh" + img_add + ".png"));
+  ui.actionOpen->setIcon(
+      QIcon(":media/images/qbutton_icons/open_remote" + img_add + ".png"));
+  ui.actionConfig->setIcon(
+      QIcon(":media/images/qbutton_icons/rclone_config" + img_add + ".png"));
+  // Preferences button action is triggered via slot defined in ui file
+  // as we dont want pref icon in the menu
+  ui.buttonPrefs->setIcon(
+      QIcon(":media/images/qbutton_icons/preferences" + img_add + ".png"));
+
+  ui.actionStopAllTransfers->setIcon(
+      QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
+  ui.actionCleanNotRunning->setIcon(
+      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
+  // triggered via slot so button text can be different than action menu
+  ui.buttonSortByTime->setIcon(
+      QIcon(":media/images/qbutton_icons/sortZA" + img_add + ".png"));
+
   ui.actionDryRun->setIcon(
       QIcon(":media/images/qbutton_icons/dryrun" + img_add + ".png"));
   ui.actionRun->setIcon(
@@ -183,20 +202,6 @@ MainWindow::MainWindow() {
       QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
   ui.actionStop->setIcon(
       QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
-  ui.actionRefresh->setIcon(
-      QIcon(":media/images/qbutton_icons/refresh" + img_add + ".png"));
-  ui.actionOpen->setIcon(
-      QIcon(":media/images/qbutton_icons/open_remote" + img_add + ".png"));
-  ui.actionConfig->setIcon(
-      QIcon(":media/images/qbutton_icons/rclone_config" + img_add + ".png"));
-  ui.actionStopAllTransfers->setIcon(
-      QIcon(":media/images/qbutton_icons/stop" + img_add + ".png"));
-  ui.actionCleanNotRunning->setIcon(
-      QIcon(":media/images/qbutton_icons/purge" + img_add + ".png"));
-  // Preferences button action is triggered via slot defined in ui file
-  // as we dont want pref icon in the menu
-  ui.buttonPrefs->setIcon(
-      QIcon(":media/images/qbutton_icons/preferences" + img_add + ".png"));
 
   // triggered via slot so button text can be different than action menu
   ui.buttonAddToQueue->setIcon(
@@ -1277,6 +1282,105 @@ MainWindow::MainWindow() {
     ui.labelSchedulerInfoStop->show();
 
     ui.tabs->setTabText(4, QString("Scheduler (%1)").arg(mSchedulersCount));
+  });
+
+  //!!!  QObject::connect(ui.actionSortByTime
+  QObject::connect(ui.actionSortByTime, &QAction::triggered, this, [=]() {
+    qDebug() << "actionSortByTime";
+
+    int widgetsCount = ui.jobs->count();
+    int move;
+    QDateTime dt;
+
+    qDebug() << "widgetsCount" << widgetsCount;
+
+
+
+
+    qDebug() << "QDateTime::currentDateTime(): " << QDateTime::currentDateTime();
+
+
+    for (int i = 0; i < (widgetsCount - 2) / 2 - 1; i = i + 1) {
+      qDebug() << "i: " << i;
+
+      for (int j = widgetsCount - 4; j >= i * 2; j = j - 2) {
+        qDebug() << "j: " << j;
+
+        QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+        if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+
+          if (j == widgetsCount - 4) {
+
+            move = j;
+            dt = transfer->getStartDateTime();
+
+          } else {
+
+            if (dt > transfer->getStartDateTime()) {
+
+              move = j;
+              dt = transfer->getStartDateTime();
+            }
+          }
+        }
+      }
+      qDebug() << "move: " << move;      
+      // move j to top
+         QWidget *widget = ui.jobs->itemAt(move)->widget();     
+         auto transfer = qobject_cast<JobWidget *>(widget);
+
+         QWidget *widget_line = ui.jobs->itemAt(move+1)->widget();
+         auto line  = qobject_cast<QFrame *>(widget_line);   
+
+        ui.jobs->removeWidget(transfer);
+        ui.jobs->removeWidget(line);
+
+
+     ui.jobs->insertWidget(i*2, transfer);
+     ui.jobs->insertWidget(i*2+1, line);   
+      
+      
+    }
+    
+     qDebug() << "QDateTime::currentDateTime(): " << QDateTime::currentDateTime();   
+
+    /*
+        for (int i = 0; i <= widgetsCount-2; i = i + 2) {
+
+          for (int j = widgetsCount - 2; j >= 0; j = j - 2) {
+
+            QWidget *widget = ui.jobs->itemAt(j)->widget();
+
+            if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+
+              QDateTime dt = transfer->getStartDateTime();
+              qDebug() << "getStartDateTime(): " <<
+       transfer->getStartDateTime();
+
+            } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+
+            } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+
+            }
+          }
+          // move up extreme
+
+
+        }
+
+     */
+
+    //        QWidget *widget_line = ui.jobs->itemAt(i+1)->widget();
+    //        auto line  = qobject_cast<QFrame *>(widget_line);
+    /*
+        ui.jobs->removeWidget(transfer);
+        ui.jobs->removeWidget(line);
+
+
+     ui.jobs->insertWidget(0, transfer);
+     ui.jobs->insertWidget(1, line);
+    */
   });
 
   //!!!  QObject::connect(ui.actionAddToScheduler
@@ -3871,7 +3975,8 @@ void MainWindow::addSavedTransfer(const QString &uniqueId, bool dryRun,
   QMutexLocker locker(&mMutex);
 
   // keep for future use
-  if (dryRun) {}
+  if (dryRun) {
+  }
 
   // find task based on taskID
   for (int k = 0; k < ui.tasksListWidget->count(); k = k + 1) {

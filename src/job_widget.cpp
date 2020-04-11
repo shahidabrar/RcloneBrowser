@@ -9,6 +9,10 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     : QWidget(parent), mProcess(process) {
   ui.setupUi(this);
 
+  mStartDateTime = QDateTime::currentDateTime();
+
+qDebug() << "mStartDateTime: " << mStartDateTime;
+
   mArgs.append(QDir::toNativeSeparators(GetRclone()));
   mArgs.append(args);
   mArgs.append(GetRcloneConf());
@@ -358,3 +362,5 @@ QString JobWidget::getUniqueID() { return mUniqueID; }
 QString JobWidget::getRequestId() { return mRequestId; }
 
 QString JobWidget::getTransferMode() { return mTransferMode; }
+
+QDateTime JobWidget::getStartDateTime() { return mStartDateTime; }

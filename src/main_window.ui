@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>833</width>
-    <height>466</height>
+    <width>821</width>
+    <height>463</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -241,8 +241,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>785</width>
-             <height>300</height>
+             <width>773</width>
+             <height>297</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -816,8 +816,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>785</width>
-             <height>300</height>
+             <width>773</width>
+             <height>297</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -872,7 +872,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>833</width>
+     <width>821</width>
      <height>22</height>
     </rect>
    </property>
@@ -1184,6 +1184,22 @@
    <hints>
     <hint type="sourcelabel">
      <x>380</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonSortByTime</sender>
+   <signal>clicked()</signal>
+   <receiver>actionSortByTime</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
      <y>73</y>
     </hint>
     <hint type="destinationlabel">
