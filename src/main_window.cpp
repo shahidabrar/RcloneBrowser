@@ -4859,6 +4859,7 @@ void MainWindow::sortJobs() {
   int widgetsCount = ui.jobs->count();
   int move;
   QDateTime dt;
+  QDateTime widgetStartDateTime;
 
   qDebug() << "widgetsCount" << widgetsCount;
 
@@ -4871,41 +4872,54 @@ void MainWindow::sortJobs() {
       QWidget *widget = ui.jobs->itemAt(j)->widget();
 
       if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+        widgetStartDateTime = transfer->getStartDateTime();
 
+      } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+        widgetStartDateTime = mount->getStartDateTime();
 
-        if (j == widgetsCount - 4) {
-          move = j;
-          dt = transfer->getStartDateTime();
+      } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+        widgetStartDateTime = stream->getStartDateTime();
+      }
+
+      if (j == widgetsCount - 4) {
+        move = j;
+        dt = widgetStartDateTime;
+      } else {
+        if (mJobsTimeSortOrder) {
+          if (dt > widgetStartDateTime) {
+            move = j;
+            dt = widgetStartDateTime;
+          }
         } else {
-          if (mJobsTimeSortOrder) {
-            if (dt > transfer->getStartDateTime()) {
-              move = j;
-              dt = transfer->getStartDateTime();
-            }
-          } else {
-            if (dt < transfer->getStartDateTime()) {
-              move = j;
-              dt = transfer->getStartDateTime();
-            }
+          if (dt < widgetStartDateTime) {
+            move = j;
+            dt = widgetStartDateTime;
           }
         }
-
-
       }
+
     } // for (int j
-    
+
     //    qDebug() << "move: " << move;
     // move j to top
     QWidget *widget = ui.jobs->itemAt(move)->widget();
-    auto transfer = qobject_cast<JobWidget *>(widget);
-
     QWidget *widget_line = ui.jobs->itemAt(move + 1)->widget();
     auto line = qobject_cast<QFrame *>(widget_line);
 
-    ui.jobs->removeWidget(transfer);
-    ui.jobs->removeWidget(line);
+    if (auto transfer = qobject_cast<JobWidget *>(widget)) {
+      ui.jobs->removeWidget(transfer);
+      ui.jobs->removeWidget(line);
+      ui.jobs->insertWidget(i * 2, transfer);
+    } else if (auto mount = qobject_cast<MountWidget *>(widget)) {
+      ui.jobs->removeWidget(mount);
+      ui.jobs->removeWidget(line);
+      ui.jobs->insertWidget(i * 2, mount);
+    } else if (auto stream = qobject_cast<StreamWidget *>(widget)) {
+      ui.jobs->removeWidget(stream);
+      ui.jobs->removeWidget(line);
+      ui.jobs->insertWidget(i * 2, stream);
+    }
 
-    ui.jobs->insertWidget(i * 2, transfer);
     ui.jobs->insertWidget(i * 2 + 1, line);
   }
 
