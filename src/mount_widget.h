@@ -14,6 +14,7 @@ public:
   ~MountWidget();
   bool isRunning = true;
   QDateTime getStartDateTime();
+  QString getStatus();
 
 public slots:
   void cancel();
@@ -37,8 +38,11 @@ private:
   QString mRcPort = "0";
   QStringList mArgs;
   QString mUniqueID = "";
+
+  // 0 - running, 1 - finished, 2 - error
+  QString mStatus = "0zm";
+
   QDateTime mStartDateTime = QDateTime::currentDateTime();
   QDateTime mFinishDateTime;
-
   void updateStartFinishInfo();
 };

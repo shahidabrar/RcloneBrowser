@@ -147,10 +147,12 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
                 "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
+          mStatus = "1s";
         } else {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
+          mStatus = "2s";
         }
 
         ui.cancel->setToolTip("Close");
@@ -166,6 +168,7 @@ StreamWidget::StreamWidget(QProcess *rclone, QProcess *player,
   ui.showDetails->setStyleSheet(
       "QToolButton { border: 0; color: green; font-weight: bold;}");
   ui.showDetails->setText("  Streaming");
+  mStatus = "0s";
 }
 
 StreamWidget::~StreamWidget() {}
@@ -192,3 +195,5 @@ void StreamWidget::updateStartFinishInfo() {
       QLocale(QLocale::English)
           .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
 }
+
+QString StreamWidget::getStatus() { return mStatus; }

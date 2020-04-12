@@ -88,6 +88,9 @@ private:
   // so job is not removed from the queue
   bool mAppQuittingStatus = false;
 
+  // don't sort then stopping all transfers
+  bool mActionStopAllTransfersRunning = false;
+
   bool canClose();
   void closeEvent(QCloseEvent *ev) override;
   bool getConfigPassword(QProcess *p);

@@ -16,6 +16,7 @@ public:
   void showDetails();
   bool isRunning = true;
   QDateTime getStartDateTime();
+  QString getStatus();
 
 public slots:
   void cancel();
@@ -41,6 +42,9 @@ private:
   QString mTransferMode = "";
   QString mRequestId = "";
   QString mJobFinalStatus = "";
+
+  // 0 - running, 1 - finished, 2 - error
+  QString mStatus = "0t";
 
   QDateTime mStartDateTime = QDateTime::currentDateTime();
   QDateTime mFinishDateTime;

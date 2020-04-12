@@ -309,6 +309,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
           }
           ui.showDetails->setText("  Finished");
           mJobFinalStatus = "finished";
+          mStatus = "1t";
           ui.progress_info->hide();
         } else {
           ui.showDetails->setStyleSheet(
@@ -318,6 +319,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
           if (mJobFinalStatus == "stopped") {
           } else {
             mJobFinalStatus = "error";
+            mStatus = "2t2";
           }
 
           ui.progress_info->hide();
@@ -346,6 +348,7 @@ void JobWidget::cancel() {
   }
 
   mJobFinalStatus = "stopped";
+  mStatus = "2t1";
 
   mProcess->kill();
   mProcess->waitForFinished();
@@ -376,3 +379,5 @@ void JobWidget::updateStartFinishInfo() {
       QLocale(QLocale::English)
           .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
 }
+
+QString JobWidget::getStatus() { return mStatus; }

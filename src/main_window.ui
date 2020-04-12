@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
-    <height>537</height>
+    <width>955</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="tabsClosable">
        <bool>true</bool>
@@ -215,10 +215,10 @@
           <item>
            <widget class="QToolButton" name="buttonSortByStatus">
             <property name="toolTip">
-             <string>Sort by start status</string>
+             <string>Sort by status</string>
             </property>
             <property name="statusTip">
-             <string>Sort by start status</string>
+             <string>Sort by status</string>
             </property>
             <property name="text">
              <string>Sort</string>
@@ -279,8 +279,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>927</width>
-             <height>371</height>
+             <width>907</width>
+             <height>389</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -854,8 +854,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>927</width>
-             <height>371</height>
+             <width>907</width>
+             <height>389</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -910,7 +910,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>975</width>
+     <width>955</width>
      <height>22</height>
     </rect>
    </property>

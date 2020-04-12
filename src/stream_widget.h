@@ -13,6 +13,7 @@ public:
   ~StreamWidget();
   bool isRunning = true;
   QDateTime getStartDateTime();
+  QString getStatus();
 
 public slots:
   void cancel();
@@ -28,6 +29,9 @@ private:
   QProcess *mPlayer;
 
   QStringList mArgs;
+
+  // 0 - running, 1 - finished, 2 - error
+  QString mStatus = "0s";
 
   QDateTime mStartDateTime = QDateTime::currentDateTime();
   QDateTime mFinishDateTime;

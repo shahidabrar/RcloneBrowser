@@ -275,6 +275,7 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
         }
 
         QString info = "Mounted " + ui.info->text();
+        mStatus = "0zm";
         ui.showDetails->setToolTip("Show details");
         ui.showDetails->setStatusTip("Show details");
         QString infoTrimmed;
@@ -295,12 +296,14 @@ MountWidget::MountWidget(QProcess *process, const QString &remote,
                 "QToolButton { border: 0; color: black; font-weight: bold;}");
           }
           ui.showDetails->setText("  Finished");
+          mStatus = "1zm";
           ui.showDetails->setToolTip("Show details");
           ui.showDetails->setStatusTip("Show details");
         } else {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Error");
+          mStatus = "2zm";
           ui.showDetails->setToolTip("Show details");
           ui.showDetails->setStatusTip("Show details");
         }
@@ -338,6 +341,7 @@ void MountWidget::cancel() {
           ui.showDetails->setStyleSheet(
               "QToolButton { border: 0; color: red; font-weight: bold;}");
           ui.showDetails->setText("  Mounted");
+          mStatus = "0zm1";
           ui.showDetails->setToolTip("Unmounting failed - check if mount"
                                      " is not used by other programs");
           ui.showDetails->setStatusTip("Unmounting failed - check if mount"
@@ -406,3 +410,5 @@ void MountWidget::updateStartFinishInfo() {
       QLocale(QLocale::English)
           .toString(mFinishDateTime, "ddd, dd/MMM/yyyy HH:mm:ss t"));
 }
+
+QString MountWidget::getStatus() { return mStatus; }
